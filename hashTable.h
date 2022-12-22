@@ -2,6 +2,7 @@
 #define HASHTABLE_H_
 
 #include "listNode.h"
+#include "exception.h"
 
 const int DEFAULT_TABLE_SIZE = 64;
 
@@ -17,16 +18,18 @@ class hashTable
         void resize();
 
         int hashFunc(int num) {return num % size};
+
+        bool isInTable(int key) const;
     
     public:
         hashTable();
         hashTable(cosnt hashTable& other) = delete;
         hashTable& operator=(const hashTable& other) = delete;
-        ~hashTable(); //TODO
+        ~hashTable(); 
 
-        const T& get(int key) const; //TODO
-        void insert(int key, const T& data); //TODO
-        void remove(int key); //TODO
+        const T& get(int key) const; 
+        void insert(int key, const T& data);
+        //void remove(int key); //TODO
 
 };
 
@@ -37,7 +40,7 @@ hashTable<T>::hashTable()
 {
     this->size = DEFAULT_TABLE_SIZE;
     currentSize = 0;
-    maxCurrentSize = 64;
+    maxCurrentSize = DEFAULT_TABLE_SIZE;
     this->data = new ListNode<T>*[size];
 }
 
@@ -85,7 +88,52 @@ hashTable<T>::~hashTable()
 }
 
 template<class T>
-const T& get(int key) const
+const T& hashTable<T>::get(int key) const
+{
+    ListNode<T>* currentNode = data[hashFunc(key)];
+    if(currentNode == nullptr)
+        throw NoKeyFounded(); // cant return "default" value casue dont know what T is
+    if(currentNode->isInList(key))
+    {
+        while (currentNode != nullptr)
+        {
+            if(currentNode->getId() == key)
+                return currentNode->getData();
+            else
+                currentNode = currentNode->next;
+        }
+    }
+
+    throw NoKeyFounded();
+}
+
+template<class T>
+bool hashTable<T>::isInTable(int key) const
+{
+    ListNode<T>* currentNode = data[hashFunc(key)];
+    if(currentNode == nullptr)
+        return false;
+    if(currentNode->isInList(key))
+        return true;
+    return false;
+}
+
+template<class T>
+void hashTable<T>::insert(int key, const T& data)
+{
+    if(isInTable(key))
+        return;
+
+    ListNode<T>* currentNode = data[hashFunc(key)];
+    if(currentNode == nullptr)
+        currentNode = new ListNode<T>(data, key);
+    else
+        currentNode->insert(new ListNode<T>(data, key));
+    currentSize++;
+    if(currentSize == maxCurrentSize)
+        resize();
+    
+}
 
 
 /* ----------------------------------------------------------------------*/

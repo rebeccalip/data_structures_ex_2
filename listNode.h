@@ -12,7 +12,7 @@ class ListNode
 
     public:
         ListNode() = default;
-        ListNode(T& data, int id) : {data(data), id(id), next(nullptr)};
+        ListNode(const T& data, int id) : {data(data), id(id), next(nullptr)};
         ListNode(const ListNode& other) = delete;
         ListNode& operator=(const ListNode& other) = delete;
         
@@ -26,7 +26,7 @@ class ListNode
         void setId(int newId) {this->id = newId};
 
         void insert(ListNode* newNode); 
-        bool isInList(int id);
+        bool isInList(int idSearch);
         //ListNode* remove(); //TODO
 
 };

@@ -6,6 +6,8 @@
 
 class InvalidKey : public std::exception {}; 
 
-class InvalidNode : public std::exception {}; 
+class InvalidNode : public std::exception {};
+
+class NoKeyFounded : public std::exception {};
 
 #endif // EXCEPTION_H_

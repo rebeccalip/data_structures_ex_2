@@ -27,7 +27,8 @@ private:
     friend class Team;
 
 public:
-    Player(int playerId, int teamId, const permutation_t &spirit, int gamesPlayed, int ability, int cards, bool goalKeeper, int num_of_team_games_before);      
+    Player(int playerId, int teamId, const permutation_t &spirit, int gamesPlayed, int ability, int cards, 
+        bool goalKeeper, int num_of_team_games_before, const permutation_t& teams_spirit);      
     ~Player() = default;
 
     int getPlayerId() const;
@@ -36,6 +37,8 @@ public:
     int getNumCards() const;
     int getNumGamesPlayedBefore() const;
     bool getIsGoalKeeper() const;
+    permutation_t& get_spirit_before_him() const;
+
     void setNumOfTeamGamesBefore(int num_games);
     void uptadeGoals(const int extraGoals);
     void uptadeCards(const int extraCards);
