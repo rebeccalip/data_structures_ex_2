@@ -39,7 +39,7 @@ StatusType world_cup_t::add_team(int teamId)
 	{
 		return StatusType::FAILURE;
 	}
-	
+	num_of_teams++;
 	return StatusType::SUCCESS;
 }
 
@@ -56,7 +56,8 @@ StatusType world_cup_t::remove_team(int teamId)
 	team->getFirstPlayer()->setTeam(null_team);
 	teams_tree_id.remove(teamId);
 	teams_ability_tree.remove(teams_ability);
-
+	num_of_teams--;
+	return StatusType::SUCCESS;
 	
 }
 
@@ -158,37 +159,89 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 
 output_t<int> world_cup_t::num_played_games_for_player(int playerId)
 {
-	// TODO: Your code goes here
-	return 22;
+	if(playerId<=0)
+		return StatusType::INVALID_INPUT;
+	if (!player_hash_table.isInTable(playerId))
+		return StatusType::FAILURE;
+
+	OppNode* node = player_hash_table.get(playerId);
+	std::shared_ptr<Player> player = node->getPlayer();
+	int sum_games = player->getNumGamesPlayed() - player->getNumGamesPlayedBefore();
+	while (node != nullptr)
+	{
+		sum_games += node->getGames();
+		node=node->getParent();
+	}
+	
+	return output_t<int>(sum_games);
 }
 
 StatusType world_cup_t::add_player_cards(int playerId, int cards)
 {
-	// TODO: Your code goes here
+	if(playerId<=0 || cards<0)
+		return StatusType::INVALID_INPUT;
+	if (!player_hash_table.isInTable(playerId))
+		return StatusType::FAILURE;
+	if (player_hash_table.get(playerId)->getParent()->getTeam() == nullptr)
+		return StatusType::FAILURE;
+
+	std::shared_ptr<Player> player = player_hash_table.get(playerId)->getPlayer();
+	player->uptadeCards(cards);
+
 	return StatusType::SUCCESS;
 }
 
 output_t<int> world_cup_t::get_player_cards(int playerId)
 {
-	// TODO: Your code goes here
-	return StatusType::SUCCESS;
+	if(playerId<=0)
+		return StatusType::INVALID_INPUT;
+	if (!player_hash_table.isInTable(playerId))
+		return StatusType::FAILURE;
+
+	std::shared_ptr<Player> player = player_hash_table.get(playerId)->getPlayer();
+	return output_t<int>(player->getNumCards());
 }
 
 output_t<int> world_cup_t::get_team_points(int teamId)
 {
-	// TODO: Your code goes here
-	return 30003;
+	if (teamId <= 0)
+		return StatusType::INVALID_INPUT;
+	if (teams_tree_id.find(teamId) == nullptr)
+		return StatusType::FAILURE;
+
+	std::shared_ptr<Team> team = teams_tree_id.find(teamId)->getValue();
+	return output_t<int>(team->getPoints());
 }
 
 output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 {
-	// TODO: Your code goes here
-	return 12345;
+	if(i<0 || i>=num_of_teams)
+		return StatusType::FAILURE;
+	
+	std::shared_ptr<Team> team = teams_ability_tree.select(i+1)->getValue();
+	return output_t<int>(team->getTeamId());
+
 }
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 {
-	// TODO: Your code goes here
+	if(playerId<=0)
+		return StatusType::INVALID_INPUT;
+	if (!player_hash_table.isInTable(playerId))
+		return StatusType::FAILURE;
+	if (player_hash_table.get(playerId)->getParent()->getTeam() == nullptr)
+		return StatusType::FAILURE;
+
+	OppNode* node = player_hash_table.get(playerId);
+	std::shared_ptr<Player> player = node->getPlayer();
+	permutation_t per = player->get_spirit_before_him();
+	while (node != nullptr)
+	{
+		per = per*node->getPermutation();
+		node=node->getParent();
+	}
+	
+	return output_t<permutation_t>(per);
 	return permutation_t();
 }
 

@@ -604,10 +604,14 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::selectHelper(const int k, Nod
     if(node->left != nullptr && node->left->rank > k-1)
         return selectHelper(k, node->left);
 
-    if(node->left != nullptr && node->left->rank < k-1)
-        return selectHelper(k-node->left->rank-1, node->right);
-    
+    if(node->left != nullptr && node->left->rank < k-1 || node->left == nullptr)
+        return selectHelper(k-node->left->rank-1, node->right);   
 }
 
+template <class T, class S>
+typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::select(const int k) const
+{
+    return selectHelper(k, root);  
+}
 
 #endif
