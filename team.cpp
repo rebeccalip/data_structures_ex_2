@@ -1,20 +1,30 @@
 #include "team.h"
 #include "player.h"
 
-Team::Team(int teamId, int points1)
+Team::Team(int teamId)
 {
     team_id=teamId;
-    points = points1;
+    points = 0;
     num_of_players=0;
     num_of_games=0;
-    sum_of_cards=0;
-    sum_of_goals=0;
     num_of_goal_keepers=0;
+    teams_ability.setTeamId(team_id);
+    //is_in_game = true;
+    sum_of_player_abilities = 0;
+    team_spirit = permutation_t::neutral();
 }
 
 int Team::getTeamId() const
 {
     return team_id;
+}
+OppNode* Team::getFirstPlayer() const
+{
+    return this->firstPlayer;
+}
+void Team::setFirstPlayer(OppNode* firstPlayer)
+{
+    this->firstPlayer = firstPlayer;
 }
 int Team::getPoints() const
 {
@@ -24,17 +34,23 @@ int Team::getNumPlayers() const
 {
     return num_of_players;
 }
-int Team::getNumGoals() const
-{
-    return sum_of_goals;
-}
-int Team::getNumCards() const
-{
-    return sum_of_cards;
-}
 int Team::getNumGames() const
 {
     return num_of_games;
+}
+
+int Team::getPlayersAbilities() const
+{
+    return sum_of_player_abilities
+}
+permutation_t Team::getTeamsSpirit() const
+{
+    return team_spirit;
+}
+
+TeamAbility Team::getTeamsAbility() const
+{
+    return teams_ability;
 }
 
 void Team::updatePoints(const int extra)
@@ -53,62 +69,28 @@ bool Team::isEmpty()
 
 bool Team::isLegal()
 {
-    return (num_of_players>=LEGAL_MINIMAL_PLAYERS) && (num_of_goal_keepers>0);
+    return (num_of_goal_keepers>0);
 }
-
-void Team::addPlayerToTeam(std::shared_ptr<class Player> player)
+void Team::updateNumOfPlayers()
 {
-    teams_playres_id.insert(player->getPlayerId(), player);
-    try
-    {
-        teams_playres_score.insert(player->getScore(), nullptr);
-    }
-    catch(const std::bad_alloc&)
-    {
-        teams_playres_id.remove(player->getPlayerId());
-        throw;
-    }
-    num_of_players++;
-    sum_of_cards += player->getNumCards();
-    sum_of_goals += player->getNumGoals();
-    if(player->getIsGoalKeeper())
-        num_of_goal_keepers++;
-    if (num_of_players==1 || teams_playres_score.getMaxKey() < player->getScore())
-        best_player = player.get();
-    player->setNumOfTeamGamesBefore(num_of_games);
+    this->num_of_players++;
 }
-
-void Team::removePlayerFromTeam(std::shared_ptr<class Player> player)
+void Team::updateSumOfPlayersAbilities(int newPlayerAbility)
 {
-    num_of_players--;
-    teams_playres_id.remove(player->getPlayerId());
-    teams_playres_score.remove(player->getScore());
-    if(best_player==player.get())
-    {
-        if(num_of_players==0)
-            best_player=nullptr;
-        else
-            best_player=((teams_playres_score.getMaxValue())->getData()).get();
-    }
-    sum_of_cards -= player->getNumCards();
-    sum_of_goals -= player->getNumGoals();
-
+    this->sum_of_player_abilities += newPlayerAbility;
 }
-
-void Team::updatePlayersTeamHelper(AvlTree<std::shared_ptr<class Player>,int>::Node* node, Team* team)
+void Team::updateNumOfGoalkeepers()
 {
-    if(node==nullptr)
-        return;
-    updatePlayersTeamHelper(node->left, team);
-    if (node->getValue() == nullptr)
-        std::cout << "problemmmm" << std::endl;
-    else
-        node->getValue()->players_team = team;
-    updatePlayersTeamHelper(node->right, team);
+    this->num_of_goal_keepers++;
+}
+void Team::updateTeamSpirit(const permutation_t& newPlayerSpirit)
+{
+    this->team_spirit = team_spirit * newPlayerSpirit;
+}
+void Team::updateTeamAbility(int newPlayerAbility)
+{
+    this->teams_ability.setTeamAbility(newPlayerAbility);
 }
 
-void Team::updatePlayersTeam(Team* team)
-{
-    updatePlayersTeamHelper(teams_playres_id.root , team);
-}
+
 

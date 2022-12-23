@@ -12,7 +12,7 @@ class Player
 {
 private:
     int player_id;
-    int team_id;
+    //int team_id;
     int games_played;
     int cards;
     bool goal_keaper;

@@ -16,12 +16,20 @@
 #define WORLDCUP23A2_H_
 
 #include "wet2util.h"
+#include "player.h"
+#include "team.h"
+#include "teamAbility.h"
+#include "avlRankTree.h"
+#include "hashTable.h"
+#include "oppositeTree.h"
+#include <memory>
 
 class world_cup_t {
 private:
-	//
-	// Here you may add anything you want
-	//
+	AvlRankTree<std::shared_ptr<Team>, int> teams_tree_id;
+	AvlRankTree<std::shared_ptr<Team>, TeamAbility> teams_ability_tree;
+	hashTable<OppNode*> player_hash_table;
+	int num_of_teams;
 	
 public:
 	// <DO-NOT-MODIFY> {

@@ -1,5 +1,6 @@
 #include "oppositeTree.h"
 
+
 OppNode* OppNode::find()
 {
     /*
@@ -7,15 +8,41 @@ OppNode* OppNode::find()
     path between the given node and the highest parent
     */
 
-    OppNode* topParent = nullptr;
-    if(this->getParent() == nullptr)
-        return this;
-    else
+    permutation_t all_per = permutation_t::neutral();
+    permutation_t part_per = permutation_t::neutral();
+    permutation_t temp_per = permutation_t::neutral();
+    OppNode* node = this;
+    OppNode* temp_node = this;
+    OppNode* root;
+    int sum_all_rank_games=0, sum_part_rank_games=0, temp_rank_games=0;
+
+    //first find the father
+    while (node->getParent() != nullptr)
     {
-        topParent = this->getParent()->find();
-        this->SetParent(topParent);
-        return topParent;
-    }      
+        all_per = all_per*node->getPermutation();
+        sum_all_rank_games += node->getGames();
+        node = node->getParent();
+    } 
+    root = node;
+    part_per = all_per;
+    sum_part_rank_games = sum_all_rank_games;
+    node = this;
+
+    //update all the needed data
+    while (node->getParent() != nullptr)
+    {
+        temp_node = node->getParent();
+        node->SetParent(root);
+        temp_per = temp_per*node->getPermutation();
+        temp_rank_games += node->getGames();
+        node->setPermutation(part_per);
+        node->setGames(sum_part_rank_games);
+        part_per = part_per*temp_per.inv();
+        sum_all_rank_games -= temp_rank_games;
+        node = temp_node;
+        
+    } 
+    return root;     
 }
 
 OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int secondSize, bool FirstBuySecond)
@@ -27,19 +54,55 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
     */
 
    // 1 of 4 case
-   if(FirstBuySecond || firstSize > secondSize)
+   if(FirstBuySecond && firstSize >= secondSize)
    {
         secondHead->SetParent(firstHead);
+        secondHead->setPermutation(firstHead->getTeam()->getPermutation());
+        firstHead->setPermutation(permutation_t::neutral());
+        
+        //games
+        secondHead->setGames(secondHead->getGames() - firstHead->getGames());
+
+        return firstHead;
 
         // try to do give null or defalut value to the second head data
-        secondHead->setData(T {});
+        
    }
-   
-   else
+   // 2 of 4 case
+   else if(!FirstBuySecond && secondSize >= firstSize)
    {
         firstHead->SetParent(secondHead);
-        firstHead->setData(T {});
+        firstHead->setPermutation(secondHead->getTeam()->getPermutation());
+        secondHead->setPermutation(permutation_t::neutral());
+
+        //games
+       firstHead->setGames(firstHead->getGames() - secondHead->getGames());
+
+       return secondHead;
    }
+   // 3 of 4 case
+   else if(FirstBuySecond && secondSize > firstSize)
+   {
+        firstHead->SetParent(secondHead);
+        secondHead->setPermutation(firstHead->getTeam()->getPermutation());
+        firstHead->setPermutation(firstHead->getTeam()->getPermutation().inv());
+        
+        //games
+        firstHead->setGames(firstHead->getGames() - secondHead->getGames());
 
+        return secondHead;
+   }
+   // 4 of 4 case - first bigger than second and second buys first
+   else
+   {
+        secondHead->SetParent(firstHead);
+        firstHead->setPermutation(secondHead->getTeam()->getPermutation());
+        secondHead->setPermutation(secondHead->getTeam()->getPermutation().inv());
 
+        //games
+        secondHead->setGames(secondHead->getGames() - firstHead->getGames());
+
+        return firstHead;
+   }
+   
 };

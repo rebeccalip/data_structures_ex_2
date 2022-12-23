@@ -6,9 +6,14 @@ TeamAbility::TeamAbility(int team_ability, int team_id)
     team_id = team_id;
 }
 
-void TeamAbility::updateTeamAbility(int extra)
+void TeamAbility::setTeamAbility(int extra)
 {
     team_ability += extra ;
+}
+
+void TeamAbility::setTeamId(int id)
+{
+    team_id = id ;
 }
 
 int TeamAbility::getTeamId() 

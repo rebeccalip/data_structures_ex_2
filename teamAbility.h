@@ -15,7 +15,8 @@ public:
     explicit TeamAbility(int team_ability, int team_id);
     TeamAbility& operator=(const TeamAbility&) = default;
     ~TeamAbility() = default;
-    void updateTeamAbility(int extra);
+    void setTeamAbility(int extra);
+    void setTeamId(int id);
 
     int getTeamId() ;
     int getTeamAbility();

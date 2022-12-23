@@ -19,13 +19,14 @@ class hashTable
 
         int hashFunc(int num) {return num % size};
 
-        bool isInTable(int key) const;
+        
     
     public:
         hashTable();
         hashTable(cosnt hashTable& other) = delete;
         hashTable& operator=(const hashTable& other) = delete;
-        ~hashTable(); 
+        ~hashTable();
+        bool isInTable(int key) const; 
 
         const T& get(int key) const; 
         void insert(int key, const T& data);
@@ -79,6 +80,8 @@ hashTable<T>::~hashTable()
         while(currentNode != nullptr)
         {
             ListNode<T>* temp = currentNode->getNext();
+            if(currentNode->getData() != nullptr) // assume the data in the linked list is pointer
+                delete currentNode->data;
             delete currentNode;
             currentNode = temp;
         }
