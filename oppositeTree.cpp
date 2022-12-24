@@ -57,11 +57,14 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    if(FirstBuySecond && firstSize >= secondSize)
    {
         secondHead->SetParent(firstHead);
-        secondHead->setPermutation(firstHead->getTeam()->getPermutation());
+        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit());
         firstHead->setPermutation(permutation_t::neutral());
         
         //games
         secondHead->setGames(secondHead->getGames() - firstHead->getGames());
+
+        //team
+        secondHead->setTeam(nullptr);
 
         return firstHead;
 
@@ -72,11 +75,14 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else if(!FirstBuySecond && secondSize >= firstSize)
    {
         firstHead->SetParent(secondHead);
-        firstHead->setPermutation(secondHead->getTeam()->getPermutation());
+        firstHead->setPermutation(secondHead->getTeam()->getTeamsSpirit());
         secondHead->setPermutation(permutation_t::neutral());
 
         //games
        firstHead->setGames(firstHead->getGames() - secondHead->getGames());
+
+       //team
+       firstHead->setTeam(nullptr);
 
        return secondHead;
    }
@@ -84,11 +90,16 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else if(FirstBuySecond && secondSize > firstSize)
    {
         firstHead->SetParent(secondHead);
-        secondHead->setPermutation(firstHead->getTeam()->getPermutation());
-        firstHead->setPermutation(firstHead->getTeam()->getPermutation().inv());
+        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit());
+        firstHead->setPermutation(firstHead->getTeam()->getTeamsSpirit().inv());
         
         //games
         firstHead->setGames(firstHead->getGames() - secondHead->getGames());
+
+        //teams
+        secondHead->setTeam(firstHead->getTeam());
+        firstHead->getTeam()->setFirstPlayer(secondHead);
+        firstHead->setTeam(nullptr);
 
         return secondHead;
    }
@@ -96,13 +107,18 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else
    {
         secondHead->SetParent(firstHead);
-        firstHead->setPermutation(secondHead->getTeam()->getPermutation());
-        secondHead->setPermutation(secondHead->getTeam()->getPermutation().inv());
+        firstHead->setPermutation(secondHead->getTeam()->getTeamsSpirit());
+        secondHead->setPermutation(secondHead->getTeam()->getTeamsSpirit().inv());
 
         //games
         secondHead->setGames(secondHead->getGames() - firstHead->getGames());
 
+        //teams
+        firstHead->setTeam(secondHead->getTeam());
+        secondHead->getTeam()->setFirstPlayer(firstHead);
+        secondHead->setTeam(nullptr);
+
         return firstHead;
    }
    
-};
+}

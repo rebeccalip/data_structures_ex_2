@@ -3,11 +3,11 @@
 
 Player::Player(int playerId, int teamId, const permutation_t &spirit, int gamesPlayed, int ability, int cards, bool goalKeeper,
      int num_of_team_games_before, const permutation_t& teams_spirit):
-        player_id(playerId), team_id(teamId), games_played(gamesPlayed), cards(cards), goal_keaper(goalKeeper),
+        player_id(playerId), games_played(gamesPlayed), cards(cards), goal_keaper(goalKeeper),
         num_of_team_games_before(num_of_team_games_before), spirit(spirit), ability(ability)
 {
     spirit_before_him = teams_spirit*spirit;
-};
+}
 
     
 
@@ -60,7 +60,7 @@ int Player::abs(const int a)
     return (-a);
 }
 
-permutation_t& get_spirit_before_him() const
+const permutation_t& Player::get_spirit_before_him() const
 {
     return spirit_before_him;
 }

@@ -97,12 +97,16 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
 	
 	//update team stats
 	std::shared_ptr<Team> playerTeam = teams_tree_id.find(teamId)->getValue();
-	playerTeam->updateNumOfPlayers();
+	teams_ability_tree.remove(playerTeam->getTeamsAbility());
+	
+	playerTeam->updateNumOfPlayers(1);
 	playerTeam->updateSumOfPlayersAbilities(ability);
 	if(goalKeeper)
-		playerTeam->updateNumOfGoalkeepers();
+		playerTeam->updateNumOfGoalkeepers(1);
 	playerTeam->updateTeamSpirit(spirit);
 	playerTeam->updateTeamAbility(ability);
+
+	teams_ability_tree.insert(playerTeam->getTeamsAbility(), playerTeam);
 	
 	return StatusType::SUCCESS;
 }
@@ -182,7 +186,7 @@ StatusType world_cup_t::add_player_cards(int playerId, int cards)
 		return StatusType::INVALID_INPUT;
 	if (!player_hash_table.isInTable(playerId))
 		return StatusType::FAILURE;
-	if (player_hash_table.get(playerId)->getParent()->getTeam() == nullptr)
+	if (player_hash_table.get(playerId)->find()->getTeam() == nullptr)
 		return StatusType::FAILURE;
 
 	std::shared_ptr<Player> player = player_hash_table.get(playerId)->getPlayer();
@@ -229,7 +233,7 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 		return StatusType::INVALID_INPUT;
 	if (!player_hash_table.isInTable(playerId))
 		return StatusType::FAILURE;
-	if (player_hash_table.get(playerId)->getParent()->getTeam() == nullptr)
+	if (player_hash_table.get(playerId)->find()->getTeam() == nullptr)
 		return StatusType::FAILURE;
 
 	OppNode* node = player_hash_table.get(playerId);
@@ -247,6 +251,29 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 
 StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 {
-	// TODO: Your code goes here
+	if( teamId1<=0 || teamId2<=0 || teamId1==teamId2)
+		return StatusType::INVALID_INPUT;
+	if (teams_tree_id.find(teamId1)==nullptr || teams_tree_id.find(teamId2)==nullptr)
+		return StatusType::FAILURE;
+
+	std::shared_ptr<Team> buyerTeam = teams_tree_id.find(teamId1)->getValue();
+	std::shared_ptr<Team> boughtTeam = teams_tree_id.find(teamId2)->getValue();
+	int sizeTeam1 = buyerTeam->getNumPlayers();
+	int sizeTeam2 = boughtTeam->getNumPlayers();
+	teams_ability_tree.remove(buyerTeam->getTeamsAbility());
+	teams_ability_tree.remove(boughtTeam->getTeamsAbility());
+	teams_tree_id.remove(teamId2);
+
+	oppUnion(buyerTeam->getFirstPlayer(), sizeTeam1, boughtTeam->getFirstPlayer(), sizeTeam2, true);
+
+	buyerTeam->updatePoints(boughtTeam->getPoints());
+	buyerTeam->updateNumOfPlayers(boughtTeam->getNumPlayers());
+	buyerTeam->updateNumOfGoalkeepers(boughtTeam->getNumGoalKeepers());
+	buyerTeam->updateSumOfPlayersAbilities(boughtTeam->getPlayersAbilities());
+	buyerTeam->updateTeamSpirit(boughtTeam->getTeamsSpirit());
+	buyerTeam->getTeamsAbility().setTeamAbility(buyerTeam->getPlayersAbilities());
+
+	teams_ability_tree.insert(buyerTeam->getTeamsAbility(), buyerTeam);
+
 	return StatusType::SUCCESS;
 }

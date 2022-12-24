@@ -6,8 +6,10 @@
 #include <iostream>
 #include <memory>
 #include "teamAbility.h"
+#include "wet2util.h"
 
 class Team;
+class OppNode;
 
 
 class Team
@@ -47,12 +49,13 @@ public:
     permutation_t getTeamsSpirit() const;
     //bool IsInGame() const;
     TeamAbility getTeamsAbility() const;
+    int getNumGoalKeepers() const;
 
     void updatePoints(const int extra);
     void updateGamesPlayed(const int extra);
-    void updateNumOfPlayers();
+    void updateNumOfPlayers(const int extra);
     void updateSumOfPlayersAbilities(int newPlayerAbility);
-    void updateNumOfGoalkeepers();
+    void updateNumOfGoalkeepers(const int extra);
     void updateTeamSpirit(const permutation_t& newPlayerSpirit);
     void updateTeamAbility(int newPlayerAbility);
 

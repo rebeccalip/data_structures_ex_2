@@ -6,6 +6,9 @@
 #include "wet2util.h"
 #include <memory>
 
+class Team;
+class Player;
+
 class OppNode
 {
     private:
@@ -38,5 +41,6 @@ class OppNode
         OppNode* find(); 
 };
 
+OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int secondSize, bool FirstBuySecond);
 
 #endif // OPPOSITETREE

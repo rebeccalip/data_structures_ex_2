@@ -41,7 +41,7 @@ int Team::getNumGames() const
 
 int Team::getPlayersAbilities() const
 {
-    return sum_of_player_abilities
+    return sum_of_player_abilities;
 }
 permutation_t Team::getTeamsSpirit() const
 {
@@ -71,17 +71,17 @@ bool Team::isLegal()
 {
     return (num_of_goal_keepers>0);
 }
-void Team::updateNumOfPlayers()
+void Team::updateNumOfPlayers(const int extra )
 {
-    this->num_of_players++;
+    this->num_of_players+=extra;
 }
 void Team::updateSumOfPlayersAbilities(int newPlayerAbility)
 {
     this->sum_of_player_abilities += newPlayerAbility;
 }
-void Team::updateNumOfGoalkeepers()
+void Team::updateNumOfGoalkeepers(const int extra)
 {
-    this->num_of_goal_keepers++;
+    this->num_of_goal_keepers+=extra;
 }
 void Team::updateTeamSpirit(const permutation_t& newPlayerSpirit)
 {
@@ -92,5 +92,9 @@ void Team::updateTeamAbility(int newPlayerAbility)
     this->teams_ability.setTeamAbility(newPlayerAbility);
 }
 
+int Team::getNumGoalKeepers() const
+{
+    return num_of_goal_keepers;
+}
 
 

@@ -37,7 +37,7 @@ public:
     int getNumCards() const;
     int getNumGamesPlayedBefore() const;
     bool getIsGoalKeeper() const;
-    permutation_t& get_spirit_before_him() const;
+    const permutation_t& get_spirit_before_him() const;
 
     void setNumOfTeamGamesBefore(int num_games);
     void uptadeGoals(const int extraGoals);

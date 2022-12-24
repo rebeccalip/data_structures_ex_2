@@ -16,6 +16,7 @@
 #define WORLDCUP23A2_H_
 
 #include "wet2util.h"
+#include "wet2util.h"
 #include "player.h"
 #include "team.h"
 #include "teamAbility.h"
@@ -30,7 +31,6 @@ private:
 	AvlRankTree<std::shared_ptr<Team>, TeamAbility> teams_ability_tree;
 	hashTable<OppNode*> player_hash_table;
 	int num_of_teams;
-	
 public:
 	// <DO-NOT-MODIFY> {
 	
