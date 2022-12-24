@@ -17,18 +17,18 @@ class hashTable
 
         void resize();
 
-        int hashFunc(int num) {return num % size};
+        int hashFunc(int num) {return num % size;};
 
         
     
     public:
         hashTable();
-        hashTable(cosnt hashTable& other) = delete;
+        hashTable(const hashTable& other) = delete;
         hashTable& operator=(const hashTable& other) = delete;
         ~hashTable();
-        bool isInTable(int key) const; 
+        bool isInTable(int key); 
 
-        const T& get(int key) const; 
+        const T& get(int key); 
         void insert(int key, const T& data);
         //void remove(int key); //TODO
 
@@ -76,24 +76,26 @@ hashTable<T>::~hashTable()
 {
     for(int i=0; i< size; i++)
     {
-        ListNode<T>* currentNode = data[i];
+        ListNode<T>* currentNode = (this->data)[i];
+        if(currentNode != nullptr)
+            currentNode = currentNode->getNext();
         while(currentNode != nullptr)
         {
             ListNode<T>* temp = currentNode->getNext();
             if(currentNode->getData() != nullptr) // assume the data in the linked list is pointer
-                delete currentNode->data;
+                delete currentNode->getData();
             delete currentNode;
             currentNode = temp;
         }
     }
 
-    delete[] data;
+    delete[] this->data;
 }
 
 template<class T>
-const T& hashTable<T>::get(int key) const
+const T& hashTable<T>::get(int key)
 {
-    ListNode<T>* currentNode = data[hashFunc(key)];
+    ListNode<T>* currentNode = this->data[hashFunc(key)];
     if(currentNode == nullptr)
         throw NoKeyFounded(); // cant return "default" value casue dont know what T is
     if(currentNode->isInList(key))
@@ -103,7 +105,7 @@ const T& hashTable<T>::get(int key) const
             if(currentNode->getId() == key)
                 return currentNode->getData();
             else
-                currentNode = currentNode->next;
+                currentNode = currentNode->getNext();
         }
     }
 
@@ -111,11 +113,14 @@ const T& hashTable<T>::get(int key) const
 }
 
 template<class T>
-bool hashTable<T>::isInTable(int key) const
+bool hashTable<T>::isInTable(int key)
 {
-    ListNode<T>* currentNode = data[hashFunc(key)];
+    ListNode<T>* currentNode = this->data[hashFunc(key)];
     if(currentNode == nullptr)
+    {
         return false;
+    }
+        
     if(currentNode->isInList(key))
         return true;
     return false;
@@ -125,12 +130,23 @@ template<class T>
 void hashTable<T>::insert(int key, const T& data)
 {
     if(isInTable(key))
+    {
         return;
-
-    ListNode<T>* currentNode = data[hashFunc(key)];
+    }
+        
+    ListNode<T>* currentNode = nullptr;
+    currentNode = (this->data)[hashFunc(key)];
     if(currentNode == nullptr)
-        currentNode = new ListNode<T>(data, key);
+    {
+        ListNode<T>* list = new ListNode<T>(data, key);
+        currentNode = list;
+        (this->data)[hashFunc(key)] = currentNode;
+    }
+        
     else
+    {
+        currentNode->insert(new ListNode<T>(data, key));
+    }
         currentNode->insert(new ListNode<T>(data, key));
     currentSize++;
     if(currentSize == maxCurrentSize)

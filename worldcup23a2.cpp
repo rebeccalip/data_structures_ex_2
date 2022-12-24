@@ -49,11 +49,11 @@ StatusType world_cup_t::remove_team(int teamId)
 		return StatusType::INVALID_INPUT;
 	if (teams_tree_id.find(teamId) == nullptr)
 		return StatusType::FAILURE;
-
 	std::shared_ptr<Team> team = teams_tree_id.find(teamId)->getValue();
 	TeamAbility teams_ability = team->getTeamsAbility();
 	std::shared_ptr<Team> null_team = nullptr;
-	team->getFirstPlayer()->setTeam(null_team);
+	if(team->getFirstPlayer() != nullptr)
+		team->getFirstPlayer()->setTeam(null_team);
 	teams_tree_id.remove(teamId);
 	teams_ability_tree.remove(teams_ability);
 	num_of_teams--;
@@ -119,7 +119,7 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 		return StatusType::FAILURE;
 
 	std::shared_ptr<Team> team1 = teams_tree_id.find(teamId1)->getValue();
-	std::shared_ptr<Team> team2 = teams_tree_id.find(teamId1)->getValue();
+	std::shared_ptr<Team> team2 = teams_tree_id.find(teamId2)->getValue();
 
 	if(!team1->isLegal() || !team2->isLegal())
 		return StatusType::FAILURE;
@@ -131,6 +131,7 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 	
 	int team1total = team1->getPoints() + team1->getPlayersAbilities();
 	int team2total = team2->getPoints() + team2->getPlayersAbilities();
+
 	if (team1total > team2total)
 	{
 		team1->updatePoints(3);

@@ -12,18 +12,23 @@ class ListNode
 
     public:
         ListNode() = default;
-        ListNode(const T& data, int id) : {data(data), id(id), next(nullptr)};
+        ListNode(const T& data, int id)
+        {
+            this->data = data;
+            this->id = id;
+            this->next = nullptr;
+        }
         ListNode(const ListNode& other) = delete;
         ListNode& operator=(const ListNode& other) = delete;
         
 
         //Getters and Setters
-        const T& getData() {return this->data};
-        void setData(const T& newData) {this->data = newData};
-        ListNode* getNext() {return this->next};
-        void setNext(ListNode* newNext) {this->next = newNext};
-        int getId() {return this->id};
-        void setId(int newId) {this->id = newId};
+        const T& getData() {return this->data;};
+        void setData(const T& newData) {this->data = newData;};
+        ListNode* getNext() {return this->next;};
+        void setNext(ListNode* newNext) {this->next = newNext;};
+        int getId() {return this->id;};
+        void setId(int newId) {this->id = newId;};
 
         void insert(ListNode* newNode); 
         bool isInList(int idSearch);
@@ -40,7 +45,7 @@ void ListNode<T>::insert(ListNode* newNode)
 }
 
 template<class T>
-bool isInList(int idSearch)
+bool ListNode<T>::isInList(int idSearch)
 {
     ListNode* node = this;
     while (node!=nullptr)

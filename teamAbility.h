@@ -21,7 +21,6 @@ public:
     int getTeamId() ;
     int getTeamAbility();
 
-    
 };
 
 bool operator<(const TeamAbility& ability1 ,const TeamAbility& ability2);

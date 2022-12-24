@@ -19,6 +19,7 @@ class AvlRankTree
             int rank;
     
         public:
+        friend class AvlRankTree<T, S>;
 
         Node(const S& key, const T& value): key(key), value(value){
                     left= nullptr;
@@ -143,7 +144,7 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::rotateRight(Node* root)
     rootLeft->height = rootLeft->calcHeight();
 
     //update ranks
-    root->rank = 1 
+    root->rank = 1 ;
     if(root->left != nullptr)
         root->rank += root->left->rank;
     if(root->right != nullptr)
@@ -170,13 +171,13 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::rotateLeft(Node* root)
     rootRight->height = rootRight->calcHeight();
 
     //update ranks
-    root->rank = 1 
+    root->rank = 1 ;
     if(root->left != nullptr)
         root->rank += root->left->rank;
     if(root->right != nullptr)
         root->rank += root->right->rank;
 
-    rootLeft->rank = 2 + rootLeft->right->rank + root->rank; 
+    rootRight->rank = 2 + rootRight->right->rank + root->rank; 
 
     return rootRight;
 }
@@ -607,8 +608,9 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::selectHelper(const int k, Nod
     if((node->left != nullptr && node->left->rank < k-1))
         return selectHelper(k - node->left->rank - 1, node->right);   
 
-    if(node->left == nullptr)
+    else
         return selectHelper(k-1, node->right);
+
 }
 
 template <class T, class S>

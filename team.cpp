@@ -9,6 +9,7 @@ Team::Team(int teamId)
     num_of_games=0;
     num_of_goal_keepers=0;
     teams_ability.setTeamId(team_id);
+    teams_ability.setTeamAbility(0);
     //is_in_game = true;
     sum_of_player_abilities = 0;
     team_spirit = permutation_t::neutral();

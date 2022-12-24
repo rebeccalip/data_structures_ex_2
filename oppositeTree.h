@@ -21,7 +21,13 @@ class OppNode
     
     public:
         OppNode() = default;
-        OppNode(OppNode* otherParent, std::shared_ptr<Player>& player) : parent(otherParent), player(player), permutation(permutation_t::neutral()), games(0){};
+        OppNode(OppNode* otherParent, std::shared_ptr<Player>& player)
+        {
+            parent = otherParent;
+            this->player = player;
+            this->permutation = permutation_t::neutral();
+            this->games = 0;
+        }
         OppNode(const OppNode& other) = default;
         ~OppNode() = default;
         OppNode& operator=(const OppNode& other) = default; 
