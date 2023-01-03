@@ -261,7 +261,11 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::insertHelper(const S& key, co
         throw InvalidKey();
     
     node->height = node->calcHeight();
-    (node->rank)++;
+    node->rank = 1;
+    if (node->left != nullptr)
+        node->rank += node->left->rank;
+    if (node->right != nullptr)
+        node->rank += node->right->rank;
     
     //return node;
     return rotate(node);
