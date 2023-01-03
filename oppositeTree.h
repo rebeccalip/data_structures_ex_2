@@ -13,30 +13,31 @@ class OppNode
 {
     private:
         OppNode* parent;
-        std::shared_ptr<Player> player;
-        std::shared_ptr<Team> team;
+        Player* player;
+        Team* team;
         permutation_t permutation;
         int games;
         // need to think if add and ID to oppNode
     
     public:
         OppNode() = default;
-        OppNode(OppNode* otherParent, std::shared_ptr<Player>& player)
+        OppNode(OppNode* otherParent, Player* player)
         {
             parent = otherParent;
             this->player = player;
             this->permutation = permutation_t::neutral();
             this->games = 0;
+            this->team = nullptr;
         }
         OppNode(const OppNode& other) = default;
-        ~OppNode() = default;
+        ~OppNode();
         OppNode& operator=(const OppNode& other) = default; 
 
         // Getters and Setters
-        const std::shared_ptr<Player>& getPlayer() const { return this->player;};
-        void setPlayer(std::shared_ptr<Player>& player) {this->player = player;};
-        const std::shared_ptr<Team>& getTeam() const { return this->team;};
-        void setTeam(const std::shared_ptr<Team>& team) {this->team = team;};
+        Player* getPlayer() const { return this->player;};
+        void setPlayer(Player* player) {this->player = player;};
+        Team* getTeam() const { return this->team;};
+        void setTeam(Team* team) {this->team = team;};
         const permutation_t& getPermutation() const { return this->permutation;};
         void setPermutation(const permutation_t& permut) {this->permutation = permut;};
         int getGames() const {return this->games;};

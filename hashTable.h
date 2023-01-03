@@ -42,18 +42,19 @@ hashTable<T>::hashTable()
     this->size = DEFAULT_TABLE_SIZE;
     currentSize = 0;
     maxCurrentSize = DEFAULT_TABLE_SIZE;
-    this->data = new ListNode<T>*[size]();
+    this->data = new ListNode<T>*[DEFAULT_TABLE_SIZE]();
 }
 
 template<class T>
 void hashTable<T>::resize()
 {
     int newSize = this->size * 2;
+    int oldSize = this->size;
     this->size = newSize;
     ListNode<T>** newData = new ListNode<T>*[newSize]();
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < oldSize; i++)
     {
-        ListNode<T>* currentNode = data[i];
+        ListNode<T>* currentNode = (this->data)[i];
         while (currentNode != nullptr)
         {
             ListNode<T>* temp = currentNode->getNext();
@@ -77,8 +78,8 @@ hashTable<T>::~hashTable()
     for(int i=0; i< size; i++)
     {
         ListNode<T>* currentNode = (this->data)[i];
-        if(currentNode != nullptr)
-            currentNode = currentNode->getNext();
+        //if(currentNode != nullptr)
+        //    currentNode = currentNode->getNext();
         while(currentNode != nullptr)
         {
             ListNode<T>* temp = currentNode->getNext();
@@ -147,7 +148,7 @@ void hashTable<T>::insert(int key, const T& data)
     {
         currentNode->insert(new ListNode<T>(data, key));
     }
-        currentNode->insert(new ListNode<T>(data, key));
+        //currentNode->insert(new ListNode<T>(data, key));
     currentSize++;
     if(currentSize == maxCurrentSize)
         resize();

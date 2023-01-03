@@ -53,7 +53,7 @@ StatusType world_cup_t::remove_team(int teamId)
 	TeamAbility teams_ability = team->getTeamsAbility();
 	std::shared_ptr<Team> null_team = nullptr;
 	if(team->getFirstPlayer() != nullptr)
-		team->getFirstPlayer()->setTeam(null_team);
+		team->getFirstPlayer()->setTeam(nullptr);
 	teams_tree_id.remove(teamId);
 	teams_ability_tree.remove(teams_ability);
 	num_of_teams--;
@@ -75,14 +75,14 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
 
 	int teamGamesUntilNow = teams_tree_id.find(teamId)->getValue()->getNumGames();
 	const permutation_t& teamSpirit = teams_tree_id.find(teamId)->getValue()->getTeamsSpirit();
-	std::shared_ptr<Player> newPlayer(new Player(playerId, teamId, spirit, gamesPlayed, ability, cards, goalKeeper, teamGamesUntilNow, teamSpirit));
+	Player* newPlayer= new Player(playerId, teamId, spirit, gamesPlayed, ability, cards, goalKeeper, teamGamesUntilNow, teamSpirit);
 
 	OppNode* playerOppNode = new OppNode(nullptr, newPlayer);
 	OppNode* teamsFirstPlayer = teams_tree_id.find(teamId)->getValue()->getFirstPlayer();
 	if(teamsFirstPlayer == nullptr)
 	{
 		teams_tree_id.find(teamId)->getValue()->setFirstPlayer(playerOppNode);
-		playerOppNode->setTeam(teams_tree_id.find(teamId)->getValue());
+		playerOppNode->setTeam(teams_tree_id.find(teamId)->getValue().get());
 		
 	}
 	else
@@ -127,7 +127,7 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 	team1->updateGamesPlayed(1);
 	team2->updateGamesPlayed(1);
 	team1->getFirstPlayer()->setGames(team1->getFirstPlayer()->getGames()+1);
-	team1->getFirstPlayer()->setGames(team2->getFirstPlayer()->getGames()+1);
+	team2->getFirstPlayer()->setGames(team2->getFirstPlayer()->getGames()+1);
 	
 	int team1total = team1->getPoints() + team1->getPlayersAbilities();
 	int team2total = team2->getPoints() + team2->getPlayersAbilities();
@@ -151,7 +151,7 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 		team1->updatePoints(3);
 		return	output_t<int>(2);
 	}
-	if(team1spirit_strength > team2spirit_strength)
+	if(team1spirit_strength < team2spirit_strength)
 	{
 		team2->updatePoints(3);
 		return output_t<int>(4);
@@ -170,7 +170,7 @@ output_t<int> world_cup_t::num_played_games_for_player(int playerId)
 		return StatusType::FAILURE;
 
 	OppNode* node = player_hash_table.get(playerId);
-	std::shared_ptr<Player> player = node->getPlayer();
+	Player* player = node->getPlayer();
 	int sum_games = player->getNumGamesPlayed() - player->getNumGamesPlayedBefore();
 	while (node != nullptr)
 	{
@@ -190,7 +190,7 @@ StatusType world_cup_t::add_player_cards(int playerId, int cards)
 	if (player_hash_table.get(playerId)->find()->getTeam() == nullptr)
 		return StatusType::FAILURE;
 
-	std::shared_ptr<Player> player = player_hash_table.get(playerId)->getPlayer();
+	Player* player = player_hash_table.get(playerId)->getPlayer();
 	player->uptadeCards(cards);
 
 	return StatusType::SUCCESS;
@@ -203,7 +203,7 @@ output_t<int> world_cup_t::get_player_cards(int playerId)
 	if (!player_hash_table.isInTable(playerId))
 		return StatusType::FAILURE;
 
-	std::shared_ptr<Player> player = player_hash_table.get(playerId)->getPlayer();
+	Player* player = player_hash_table.get(playerId)->getPlayer();
 	return output_t<int>(player->getNumCards());
 }
 
@@ -238,11 +238,11 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 		return StatusType::FAILURE;
 
 	OppNode* node = player_hash_table.get(playerId);
-	std::shared_ptr<Player> player = node->getPlayer();
+	Player* player = node->getPlayer();
 	permutation_t per = player->get_spirit_before_him();
 	while (node != nullptr)
 	{
-		per = per*node->getPermutation();
+		per = node->getPermutation()*per;
 		node=node->getParent();
 	}
 	
@@ -265,7 +265,12 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 	teams_ability_tree.remove(boughtTeam->getTeamsAbility());
 	teams_tree_id.remove(teamId2);
 
-	oppUnion(buyerTeam->getFirstPlayer(), sizeTeam1, boughtTeam->getFirstPlayer(), sizeTeam2, true);
+	if(buyerTeam->getNumPlayers()>0 && boughtTeam->getNumPlayers()>0)
+		oppUnion(buyerTeam->getFirstPlayer(), sizeTeam1, boughtTeam->getFirstPlayer(), sizeTeam2, true);
+	else if(boughtTeam->getNumPlayers()>0 && buyerTeam->getNumPlayers()==0)
+	{
+		boughtTeam->getFirstPlayer()->setTeam(buyerTeam.get());
+	}
 
 	buyerTeam->updatePoints(boughtTeam->getPoints());
 	buyerTeam->updateNumOfPlayers(boughtTeam->getNumPlayers());

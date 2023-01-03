@@ -1,5 +1,9 @@
 #include "oppositeTree.h"
 
+OppNode::~OppNode()
+{
+    delete this->player;
+}
 
 OppNode* OppNode::find()
 {
@@ -19,7 +23,7 @@ OppNode* OppNode::find()
     //first find the father
     while (node->getParent() != nullptr)
     {
-        all_per = all_per*node->getPermutation();
+        all_per = node->getPermutation()*all_per;
         sum_all_rank_games += node->getGames();
         node = node->getParent();
     } 
@@ -33,11 +37,11 @@ OppNode* OppNode::find()
     {
         temp_node = node->getParent();
         node->SetParent(root);
-        temp_per = temp_per*node->getPermutation();
+        temp_per = node->getPermutation()*temp_per;
         temp_rank_games += node->getGames();
         node->setPermutation(part_per);
         node->setGames(sum_part_rank_games);
-        part_per = part_per*temp_per.inv();
+        part_per = temp_per.inv()*part_per;
         sum_all_rank_games -= temp_rank_games;
         node = temp_node;
         
@@ -57,8 +61,8 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    if(FirstBuySecond && firstSize >= secondSize)
    {
         secondHead->SetParent(firstHead);
-        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit());
-        firstHead->setPermutation(permutation_t::neutral());
+        secondHead->setPermutation(firstHead->getPermutation().inv()*firstHead->getTeam()->getTeamsSpirit());
+        //firstHead->setPermutation(permutation_t::neutral());
         
         //games
         secondHead->setGames(secondHead->getGames() - firstHead->getGames());
@@ -75,7 +79,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else if(!FirstBuySecond && secondSize >= firstSize)
    {
         firstHead->SetParent(secondHead);
-        firstHead->setPermutation(secondHead->getTeam()->getTeamsSpirit());
+        firstHead->setPermutation(secondHead->getTeam()->getTeamsSpirit()*permutation_t::neutral());
         secondHead->setPermutation(permutation_t::neutral());
 
         //games
@@ -90,7 +94,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else if(FirstBuySecond && secondSize > firstSize)
    {
         firstHead->SetParent(secondHead);
-        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit());
+        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit()*permutation_t::neutral());
         firstHead->setPermutation(firstHead->getTeam()->getTeamsSpirit().inv());
         
         //games
@@ -107,7 +111,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else
    {
         secondHead->SetParent(firstHead);
-        firstHead->setPermutation(secondHead->getTeam()->getTeamsSpirit());
+        firstHead->setPermutation(secondHead->getTeam()->getTeamsSpirit()*permutation_t::neutral());
         secondHead->setPermutation(secondHead->getTeam()->getTeamsSpirit().inv());
 
         //games
