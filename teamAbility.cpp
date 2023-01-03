@@ -2,8 +2,8 @@
 
 TeamAbility::TeamAbility(int team_ability, int team_id)
 {
-    team_ability = team_ability;
-    team_id = team_id;
+   this-> team_ability = team_ability;
+   this-> team_id = team_id;
 }
 
 void TeamAbility::setTeamAbility(int extra)

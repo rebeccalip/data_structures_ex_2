@@ -150,7 +150,12 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::rotateRight(Node* root)
     if(root->right != nullptr)
         root->rank += root->right->rank;
 
-    rootLeft->rank = 2 + rootLeft->left->rank + root->rank; 
+    if(rootLeft-> left != nullptr)
+        rootLeft->rank = 1 + rootLeft->left->rank + root->rank;
+    else
+        rootLeft->rank = 1 + root->rank;
+
+
 
     return rootLeft;
 }
@@ -177,7 +182,11 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::rotateLeft(Node* root)
     if(root->right != nullptr)
         root->rank += root->right->rank;
 
-    rootRight->rank = 2 + rootRight->right->rank + root->rank; 
+    if(rootRight ->right != nullptr)
+        rootRight->rank = 1 + rootRight->right->rank + root->rank;
+    else
+        rootRight->rank = 1 + root->rank;
+
 
     return rootRight;
 }

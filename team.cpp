@@ -1,19 +1,22 @@
 #include "team.h"
 #include "player.h"
 
-Team::Team(int teamId)
+
+Team::Team(int teamId): teams_ability(TeamAbility())
 {
-    team_id=teamId;
-    points = 0;
-    num_of_players=0;
-    num_of_games=0;
-    num_of_goal_keepers=0;
-    teams_ability.setTeamId(team_id);
-    teams_ability.setTeamAbility(0);
+   this-> team_id=teamId;
+   this-> points = 0;
+   this-> num_of_players=0;
+   this-> num_of_games=0;
+   this-> num_of_goal_keepers=0;
+   this-> teams_ability.setTeamId(team_id);
+   this-> teams_ability.setTeamAbility(0);
+   this->firstPlayer = nullptr;
     //is_in_game = true;
-    sum_of_player_abilities = 0;
-    team_spirit = permutation_t::neutral();
+   this-> sum_of_player_abilities = 0;
+   this-> team_spirit = permutation_t::neutral();
 }
+
 
 int Team::getTeamId() const
 {

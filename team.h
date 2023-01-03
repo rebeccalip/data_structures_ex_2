@@ -25,7 +25,7 @@ private:
     permutation_t team_spirit;
     //bool is_in_game;
     TeamAbility teams_ability;
-    OppNode *firstPlayer;
+    OppNode *firstPlayer; //problem
 
     //void updatePlayersTeamHelper(AvlTree<std::shared_ptr<class Player>,int>::Node* node, Team* team);
 
@@ -34,7 +34,7 @@ public:
     friend class world_cup_t;
     friend class Player;
     Team(int teamId);
-    Team(const Team& other_team);
+    Team(const Team& other_team) = default;
     ~Team() = default;
     bool isEmpty();
     bool isLegal();

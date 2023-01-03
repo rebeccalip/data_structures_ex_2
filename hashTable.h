@@ -42,7 +42,7 @@ hashTable<T>::hashTable()
     this->size = DEFAULT_TABLE_SIZE;
     currentSize = 0;
     maxCurrentSize = DEFAULT_TABLE_SIZE;
-    this->data = new ListNode<T>*[size];
+    this->data = new ListNode<T>*[size]();
 }
 
 template<class T>
@@ -50,7 +50,7 @@ void hashTable<T>::resize()
 {
     int newSize = this->size * 2;
     this->size = newSize;
-    ListNode<T>** newData = new ListNode<T>*[newSize];
+    ListNode<T>** newData = new ListNode<T>*[newSize]();
     for (int i = 0; i < size; i++)
     {
         ListNode<T>* currentNode = data[i];
