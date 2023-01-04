@@ -220,7 +220,7 @@ output_t<int> world_cup_t::get_team_points(int teamId)
 
 output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 {
-	if(i<0 || i>=num_of_teams)
+	if(i<0 || i>=num_of_teams || num_of_teams==0)
 		return StatusType::FAILURE;
 	
 	std::shared_ptr<Team> team = teams_ability_tree.select(i+1)->getValue();
@@ -270,6 +270,7 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 	else if(boughtTeam->getNumPlayers()>0 && buyerTeam->getNumPlayers()==0)
 	{
 		boughtTeam->getFirstPlayer()->setTeam(buyerTeam.get());
+		buyerTeam->setFirstPlayer(boughtTeam->getFirstPlayer());
 	}
 
 	buyerTeam->updatePoints(boughtTeam->getPoints());
@@ -280,6 +281,6 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 	buyerTeam->getTeamsAbility().setTeamAbility(buyerTeam->getPlayersAbilities());
 
 	teams_ability_tree.insert(buyerTeam->getTeamsAbility(), buyerTeam);
-
+	num_of_teams--;
 	return StatusType::SUCCESS;
 }
