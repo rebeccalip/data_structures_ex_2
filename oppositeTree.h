@@ -36,13 +36,13 @@ class OppNode
         // Getters and Setters
         Player* getPlayer() const { return this->player;};
         void setPlayer(Player* player) {this->player = player;};
-        Team* getTeam() const { return this->team;};
+        Team* getTeam() { return this->team;};
         void setTeam(Team* team) {this->team = team;};
         const permutation_t& getPermutation() const { return this->permutation;};
         void setPermutation(const permutation_t& permut) {this->permutation = permut;};
-        int getGames() const {return this->games;};
+        int getGames() {return this->games;};
         void setGames(int games) {this->games = games;};
-        OppNode* getParent() const { return this->parent;};
+        OppNode* getParent() { return this->parent;};
         void SetParent(OppNode* parent) {this->parent = parent;};
 
         OppNode* find(); 

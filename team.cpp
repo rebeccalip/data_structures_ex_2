@@ -22,7 +22,7 @@ int Team::getTeamId() const
 {
     return team_id;
 }
-OppNode* Team::getFirstPlayer() const
+OppNode* Team::getFirstPlayer() 
 {
     return this->firstPlayer;
 }

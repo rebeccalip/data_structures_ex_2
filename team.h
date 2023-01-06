@@ -39,7 +39,7 @@ public:
     bool isEmpty();
     bool isLegal();
 
-    OppNode* getFirstPlayer() const;
+    OppNode* getFirstPlayer();
     void setFirstPlayer(OppNode* firstPlayer);
     int getTeamId() const;
     int getPoints() const;

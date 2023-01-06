@@ -43,11 +43,11 @@ class AvlRankTree
                     if (this ->left == nullptr && this->right == nullptr)
                         return 0;
                     else if (this ->left == nullptr && this->right != nullptr)
-                        return (-1 - this->right->getHeight());
+                        return (-1 - this->right->calcHeight());
                     else if (this ->left != nullptr && this->right == nullptr)
-                        return this->left->getHeight() + 1;
+                        return this->left->calcHeight() + 1;
                     else
-                        return (this->left->getHeight() - this->right->getHeight());
+                        return (this->left->calcHeight() - this->right->calcHeight());
                 }
 
                 int calcHeight() const 
@@ -55,13 +55,21 @@ class AvlRankTree
                     if (this ->left == nullptr && this->right == nullptr)
                         return 0;
                     else if (this ->left == nullptr && this->right != nullptr)
-                        return this->right->getHeight() + 1;
+                        return this->right->calcHeight() + 1;
                     else if (this ->left != nullptr && this->right == nullptr)
-                        return this->left->getHeight() + 1;
+                        return this->left->calcHeight() + 1;
                     else
-                        return max(this->left->getHeight(), this->right->getHeight()) + 1;
+                        return max(this->left->calcHeight(), this->right->calcHeight()) + 1;    
+                }
 
-                    
+                int calcRank() const
+                {
+                    int sum=1;
+                    if(this->left != nullptr)
+                        sum+=this->left->rank;
+                    if(this->right != nullptr)
+                        sum+=this->right->rank;
+                    return sum;
                 }
     };
 
@@ -144,17 +152,14 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::rotateRight(Node* root)
     rootLeft->height = rootLeft->calcHeight();
 
     //update ranks
-    root->rank = 1 ;
-    if(root->left != nullptr)
-        root->rank += root->left->rank;
-    if(root->right != nullptr)
-        root->rank += root->right->rank;
-
+    root->rank = root->calcRank();
+    rootLeft->rank = rootLeft->calcRank();
+    /*
     if(rootLeft-> left != nullptr)
         rootLeft->rank = 1 + rootLeft->left->rank + root->rank;
     else
         rootLeft->rank = 1 + root->rank;
-
+    */
 
 
     return rootLeft;
@@ -176,17 +181,15 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::rotateLeft(Node* root)
     rootRight->height = rootRight->calcHeight();
 
     //update ranks
-    root->rank = 1 ;
-    if(root->left != nullptr)
-        root->rank += root->left->rank;
-    if(root->right != nullptr)
-        root->rank += root->right->rank;
+    root->rank = root->calcRank();
+    rootRight->rank = rootRight->calcRank();
 
+    /*
     if(rootRight ->right != nullptr)
         rootRight->rank = 1 + rootRight->right->rank + root->rank;
     else
         rootRight->rank = 1 + root->rank;
-
+    */
 
     return rootRight;
 }
@@ -261,11 +264,7 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::insertHelper(const S& key, co
         throw InvalidKey();
     
     node->height = node->calcHeight();
-    node->rank = 1;
-    if (node->left != nullptr)
-        node->rank += node->left->rank;
-    if (node->right != nullptr)
-        node->rank += node->right->rank;
+    node->rank = node->calcRank();
     
     //return node;
     return rotate(node);
@@ -374,8 +373,8 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::internalRemoveNode(const S& k
                     child = tree;
                     tree = temp;
                 }
-                
 
+                
             }
             delete child;
         }
@@ -396,7 +395,7 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::internalRemoveNode(const S& k
     
     //update the height
     tree->height = tree->calcHeight();
-    tree->rank--;
+    tree->rank = tree->calcRank();
 
     //check if balnace is okey and and change it if not
     tree = rotate(tree);
@@ -607,23 +606,54 @@ int AvlRankTree<T,S>::getRank(const S& key) const
 
 template <class T, class S>
 typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::selectHelper(const int k, Node* node) const
-{
-    if(node->left != nullptr && node->left->rank == k-1)
+{   
+    if(node->left == nullptr && node->right==nullptr)
         return node;
-
-    if(node->left == nullptr && k==1)
-        return node;
-    
-    
-    if(node->left != nullptr && node->left->rank > k-1)
-        return selectHelper(k, node->left);
-
-    if((node->left != nullptr && node->left->rank < k-1))
-        return selectHelper(k - node->left->rank - 1, node->right);   
-
-    else
+    if(node->left == nullptr)
+    {
+        if(k==0)
+            return node;
         return selectHelper(k-1, node->right);
+    }
+    if(node->right == nullptr)
+    {
+        if(k==node->rank-1)
+            return node;
+        return selectHelper(k, node->left);
+    }
+    if(node->left->rank == k)
+        return node;
+    if(node->left->rank > k-1)
+        return selectHelper(k, node->left);
+    return selectHelper(k- node->left->rank -1 , node->right);
 
+    /*
+    if(node->left == nullptr && node->right==nullptr)
+        return node;
+
+    if(node->left != nullptr && node->left->rank == k-1)
+    {
+        return node;
+    }
+        
+    if(node->left == nullptr && k==1)
+    {
+        return node;
+    }
+        
+    if(node->left != nullptr && node->left->rank > k-1)
+    {
+        return selectHelper(k, node->left);
+    }     
+    if((node->left != nullptr && node->left->rank < k-1))
+    {
+        return selectHelper(k - node->left->rank - 1, node->right); 
+    }
+    else
+    {
+        return selectHelper(k-1, node->right);
+    }
+    */
 }
 
 template <class T, class S>

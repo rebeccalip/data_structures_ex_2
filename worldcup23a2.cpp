@@ -51,7 +51,7 @@ StatusType world_cup_t::remove_team(int teamId)
 		return StatusType::FAILURE;
 	std::shared_ptr<Team> team = teams_tree_id.find(teamId)->getValue();
 	TeamAbility teams_ability = team->getTeamsAbility();
-	std::shared_ptr<Team> null_team = nullptr;
+	//std::shared_ptr<Team> null_team = nullptr;
 	if(team->getFirstPlayer() != nullptr)
 		team->getFirstPlayer()->setTeam(nullptr);
 	teams_tree_id.remove(teamId);
@@ -223,7 +223,7 @@ output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 	if(i<0 || i>=num_of_teams || num_of_teams==0)
 		return StatusType::FAILURE;
 	
-	std::shared_ptr<Team> team = teams_ability_tree.select(i+1)->getValue();
+	std::shared_ptr<Team> team = teams_ability_tree.select(i)->getValue();
 	return output_t<int>(team->getTeamId());
 
 }
@@ -271,6 +271,7 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 	{
 		boughtTeam->getFirstPlayer()->setTeam(buyerTeam.get());
 		buyerTeam->setFirstPlayer(boughtTeam->getFirstPlayer());
+		buyerTeam->updateGamesPlayed(boughtTeam->getNumGames());
 	}
 
 	buyerTeam->updatePoints(boughtTeam->getPoints());
@@ -278,7 +279,8 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 	buyerTeam->updateNumOfGoalkeepers(boughtTeam->getNumGoalKeepers());
 	buyerTeam->updateSumOfPlayersAbilities(boughtTeam->getPlayersAbilities());
 	buyerTeam->updateTeamSpirit(boughtTeam->getTeamsSpirit());
-	buyerTeam->getTeamsAbility().setTeamAbility(buyerTeam->getPlayersAbilities());
+	//buyerTeam->getTeamsAbility().setTeamAbility(boughtTeam->getPlayersAbilities());
+	buyerTeam->updateTeamAbility(boughtTeam->getPlayersAbilities());
 
 	teams_ability_tree.insert(buyerTeam->getTeamsAbility(), buyerTeam);
 	num_of_teams--;

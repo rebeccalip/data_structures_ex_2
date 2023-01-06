@@ -37,12 +37,12 @@ OppNode* OppNode::find()
     {
         temp_node = node->getParent();
         node->SetParent(root);
-        temp_per = node->getPermutation()*temp_per;
-        temp_rank_games += node->getGames();
+        temp_per = node->getPermutation();
+        temp_rank_games = node->getGames();
         node->setPermutation(part_per);
         node->setGames(sum_part_rank_games);
-        part_per = temp_per.inv()*part_per;
-        sum_all_rank_games -= temp_rank_games;
+        part_per = part_per*temp_per.inv();
+        sum_part_rank_games -= temp_rank_games;
         node = temp_node;
         
     } 
@@ -95,7 +95,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    {
         firstHead->SetParent(secondHead);
         secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit()*permutation_t::neutral());
-        firstHead->setPermutation(firstHead->getTeam()->getTeamsSpirit().inv());
+        firstHead->setPermutation(firstHead->getTeam()->getTeamsSpirit().inv() * firstHead->getPermutation());
         
         //games
         firstHead->setGames(firstHead->getGames() - secondHead->getGames());
