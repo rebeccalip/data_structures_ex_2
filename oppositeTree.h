@@ -38,8 +38,8 @@ class OppNode
         void setPlayer(Player* player) {this->player = player;};
         Team* getTeam() { return this->team;};
         void setTeam(Team* team) {this->team = team;};
-        const permutation_t& getPermutation() const { return this->permutation;};
-        void setPermutation(const permutation_t& permut) {this->permutation = permut;};
+        permutation_t getPermutation() const { return this->permutation;};
+        void setPermutation(permutation_t permut) {this->permutation = permut;};
         int getGames() {return this->games;};
         void setGames(int games) {this->games = games;};
         OppNode* getParent() { return this->parent;};

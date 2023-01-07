@@ -28,7 +28,7 @@ OppNode* OppNode::find()
         node = node->getParent();
     } 
     root = node;
-    part_per = all_per;
+    part_per = all_per * permutation_t::neutral();
     sum_part_rank_games = sum_all_rank_games;
     node = this;
 
@@ -37,7 +37,7 @@ OppNode* OppNode::find()
     {
         temp_node = node->getParent();
         node->SetParent(root);
-        temp_per = node->getPermutation();
+        temp_per = node->getPermutation() * permutation_t::neutral();
         temp_rank_games = node->getGames();
         node->setPermutation(part_per * permutation_t::neutral());
         node->setGames(sum_part_rank_games);
