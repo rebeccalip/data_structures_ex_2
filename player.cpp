@@ -6,7 +6,7 @@ Player::Player(int playerId, int teamId, const permutation_t &spirit, int gamesP
         player_id(playerId), games_played(gamesPlayed), cards(cards), goal_keaper(goalKeeper),
         num_of_team_games_before(num_of_team_games_before), spirit(spirit), ability(ability)
 {
-    spirit_before_him = teams_spirit*spirit;
+    spirit_before_him = teams_spirit * spirit;
 }
 
     

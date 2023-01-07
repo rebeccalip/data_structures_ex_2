@@ -272,13 +272,14 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 		boughtTeam->getFirstPlayer()->setTeam(buyerTeam.get());
 		buyerTeam->setFirstPlayer(boughtTeam->getFirstPlayer());
 		buyerTeam->updateGamesPlayed(boughtTeam->getNumGames());
+		buyerTeam->newTeamSpirit(boughtTeam->getTeamsSpirit(), buyerTeam->getTeamsSpirit());
 	}
 
 	buyerTeam->updatePoints(boughtTeam->getPoints());
 	buyerTeam->updateNumOfPlayers(boughtTeam->getNumPlayers());
 	buyerTeam->updateNumOfGoalkeepers(boughtTeam->getNumGoalKeepers());
 	buyerTeam->updateSumOfPlayersAbilities(boughtTeam->getPlayersAbilities());
-	buyerTeam->updateTeamSpirit(boughtTeam->getTeamsSpirit());
+	//buyerTeam->updateTeamSpirit(boughtTeam->getTeamsSpirit());
 	//buyerTeam->getTeamsAbility().setTeamAbility(boughtTeam->getPlayersAbilities());
 	buyerTeam->updateTeamAbility(boughtTeam->getPlayersAbilities());
 

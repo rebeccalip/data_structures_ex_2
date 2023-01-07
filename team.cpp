@@ -91,6 +91,10 @@ void Team::updateTeamSpirit(const permutation_t& newPlayerSpirit)
 {
     this->team_spirit = team_spirit * newPlayerSpirit;
 }
+void Team::newTeamSpirit(const permutation_t& first, const permutation_t& second)
+{
+    this->team_spirit = first * second;
+}
 void Team::updateTeamAbility(int newPlayerAbility)
 {
     this->teams_ability.setTeamAbility(newPlayerAbility);

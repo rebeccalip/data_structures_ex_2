@@ -39,7 +39,7 @@ OppNode* OppNode::find()
         node->SetParent(root);
         temp_per = node->getPermutation();
         temp_rank_games = node->getGames();
-        node->setPermutation(part_per);
+        node->setPermutation(part_per * permutation_t::neutral());
         node->setGames(sum_part_rank_games);
         part_per = part_per*temp_per.inv();
         sum_part_rank_games -= temp_rank_games;
@@ -61,11 +61,14 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    if(FirstBuySecond && firstSize >= secondSize)
    {
         secondHead->SetParent(firstHead);
-        secondHead->setPermutation(firstHead->getPermutation().inv()*firstHead->getTeam()->getTeamsSpirit());
+        secondHead->setPermutation(firstHead->getPermutation().inv()*firstHead->getTeam()->getTeamsSpirit() * secondHead->getPermutation());
         //firstHead->setPermutation(permutation_t::neutral());
         
         //games
         secondHead->setGames(secondHead->getGames() - firstHead->getGames());
+
+        //spirit
+        firstHead->getTeam()->newTeamSpirit(firstHead->getTeam()->getTeamsSpirit() , secondHead->getTeam()->getTeamsSpirit());
 
         //team
         secondHead->setTeam(nullptr);
@@ -94,11 +97,15 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
    else if(FirstBuySecond && secondSize > firstSize)
    {
         firstHead->SetParent(secondHead);
-        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit()*permutation_t::neutral());
-        firstHead->setPermutation(firstHead->getTeam()->getTeamsSpirit().inv() * firstHead->getPermutation());
+        secondHead->setPermutation(firstHead->getTeam()->getTeamsSpirit() * secondHead->getPermutation());
+        firstHead->setPermutation(secondHead->getPermutation().inv() * firstHead->getPermutation());
+        //firstHead->setPermutation(firstHead->getTeam()->getTeamsSpirit().inv() * firstHead->getPermutation());
         
         //games
         firstHead->setGames(firstHead->getGames() - secondHead->getGames());
+
+        //spirit
+        firstHead->getTeam()->newTeamSpirit(secondHead->getTeam()->getTeamsSpirit() , firstHead->getTeam()->getTeamsSpirit());
 
         //teams
         secondHead->setTeam(firstHead->getTeam());
