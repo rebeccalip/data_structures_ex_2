@@ -606,7 +606,7 @@ int AvlRankTree<T,S>::getRank(const S& key) const
 
 template <class T, class S>
 typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::selectHelper(const int k, Node* node) const
-{   
+{   /*
     if(node->left == nullptr && node->right==nullptr)
         return node;
     if(node->left == nullptr)
@@ -626,26 +626,27 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::selectHelper(const int k, Nod
     if(node->left->rank > k-1)
         return selectHelper(k, node->left);
     return selectHelper(k- node->left->rank -1 , node->right);
-
-    /*
+    */
+    
+    
     if(node->left == nullptr && node->right==nullptr)
         return node;
 
-    if(node->left != nullptr && node->left->rank == k-1)
+    if(node->left != nullptr && node->left->rank == k)
     {
         return node;
     }
         
-    if(node->left == nullptr && k==1)
+    if(node->left == nullptr && k==0)
     {
         return node;
     }
         
-    if(node->left != nullptr && node->left->rank > k-1)
+    if(node->left != nullptr && node->left->rank > k)
     {
         return selectHelper(k, node->left);
     }     
-    if((node->left != nullptr && node->left->rank < k-1))
+    if((node->left != nullptr && node->left->rank < k))
     {
         return selectHelper(k - node->left->rank - 1, node->right); 
     }
@@ -653,7 +654,7 @@ typename AvlRankTree<T,S>::Node* AvlRankTree<T,S>::selectHelper(const int k, Nod
     {
         return selectHelper(k-1, node->right);
     }
-    */
+    
 }
 
 template <class T, class S>

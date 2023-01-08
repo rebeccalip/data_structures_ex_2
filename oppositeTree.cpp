@@ -28,16 +28,16 @@ OppNode* OppNode::find()
         node = node->getParent();
     } 
     root = node;
-    part_per = all_per * permutation_t::neutral();
+    part_per = all_per;
     sum_part_rank_games = sum_all_rank_games;
     node = this;
 
     //update all the needed data
-    while (node->getParent() != nullptr)
+    while (node->getParent() != nullptr && node->getParent() != nullptr)
     {
         temp_node = node->getParent();
         node->SetParent(root);
-        temp_per = node->getPermutation() * permutation_t::neutral();
+        temp_per = node->getPermutation();
         temp_rank_games = node->getGames();
         node->setPermutation(part_per * permutation_t::neutral());
         node->setGames(sum_part_rank_games);
@@ -105,7 +105,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
         firstHead->setGames(firstHead->getGames() - secondHead->getGames());
 
         //spirit
-        firstHead->getTeam()->newTeamSpirit(secondHead->getTeam()->getTeamsSpirit() , firstHead->getTeam()->getTeamsSpirit());
+        firstHead->getTeam()->newTeamSpirit(firstHead->getTeam()->getTeamsSpirit() , secondHead->getTeam()->getTeamsSpirit());
 
         //teams
         secondHead->setTeam(firstHead->getTeam());
@@ -129,7 +129,6 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
         firstHead->setTeam(secondHead->getTeam());
         secondHead->getTeam()->setFirstPlayer(firstHead);
         secondHead->setTeam(nullptr);
-        
 
         return firstHead;
    }

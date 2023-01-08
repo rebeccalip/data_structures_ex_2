@@ -60,7 +60,7 @@ int Player::abs(const int a)
     return (-a);
 }
 
-const permutation_t& Player::get_spirit_before_him() const
+const permutation_t Player::get_spirit_before_him() const
 {
     return spirit_before_him;
 }

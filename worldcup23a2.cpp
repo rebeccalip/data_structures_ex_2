@@ -74,7 +74,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
 		return StatusType::FAILURE;
 
 	int teamGamesUntilNow = teams_tree_id.find(teamId)->getValue()->getNumGames();
-	const permutation_t& teamSpirit = teams_tree_id.find(teamId)->getValue()->getTeamsSpirit();
+	const permutation_t teamSpirit = teams_tree_id.find(teamId)->getValue()->getTeamsSpirit()*permutation_t::neutral();
 	Player* newPlayer= new Player(playerId, teamId, spirit, gamesPlayed, ability, cards, goalKeeper, teamGamesUntilNow, teamSpirit);
 
 	OppNode* playerOppNode = new OppNode(nullptr, newPlayer);
@@ -83,8 +83,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
 	{
 		teams_tree_id.find(teamId)->getValue()->setFirstPlayer(playerOppNode);
 		playerOppNode->setTeam(teams_tree_id.find(teamId)->getValue().get());
-		playerOppNode->setPermutation(permutation_t::neutral());
-		
+		playerOppNode->setPermutation(permutation_t::neutral());	
 	}
 	else
 	{
@@ -241,14 +240,14 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 
 	OppNode* node = player_hash_table.get(playerId);
 	Player* player = node->getPlayer();
-	permutation_t per = player->get_spirit_before_him();
+	permutation_t per = player->get_spirit_before_him()*permutation_t::neutral();
 	while (node != nullptr)
 	{
 		per = node->getPermutation()*per;
 		node=node->getParent();
 	}
 	
-	return output_t<permutation_t>(per);
+	return output_t<permutation_t>(per*permutation_t::neutral());
 	return permutation_t();
 }
 

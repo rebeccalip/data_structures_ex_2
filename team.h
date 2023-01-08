@@ -57,8 +57,8 @@ public:
     void updateNumOfPlayers(const int extra);
     void updateSumOfPlayersAbilities(int newPlayerAbility);
     void updateNumOfGoalkeepers(const int extra);
-    void updateTeamSpirit(const permutation_t& newPlayerSpirit);
-    void newTeamSpirit(const permutation_t& first, const permutation_t& second);
+    void updateTeamSpirit(const permutation_t newPlayerSpirit);
+    void newTeamSpirit(const permutation_t first, const permutation_t second);
     void updateTeamAbility(int newPlayerAbility);
 
 

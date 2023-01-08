@@ -87,11 +87,11 @@ void Team::updateNumOfGoalkeepers(const int extra)
 {
     this->num_of_goal_keepers+=extra;
 }
-void Team::updateTeamSpirit(const permutation_t& newPlayerSpirit)
+void Team::updateTeamSpirit(const permutation_t newPlayerSpirit)
 {
     this->team_spirit = team_spirit * newPlayerSpirit;
 }
-void Team::newTeamSpirit(const permutation_t& first, const permutation_t& second)
+void Team::newTeamSpirit(const permutation_t first, const permutation_t second)
 {
     this->team_spirit = first * second;
 }
