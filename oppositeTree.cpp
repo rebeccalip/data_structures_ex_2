@@ -111,6 +111,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
         secondHead->setTeam(firstHead->getTeam());
         firstHead->getTeam()->setFirstPlayer(secondHead);
         firstHead->setTeam(nullptr);
+        secondHead->getTeam()->setGamesPlayed(secondHead->getGames());
 
         return secondHead;
    }
@@ -128,6 +129,7 @@ OppNode* oppUnion(OppNode* firstHead, int firstSize, OppNode* secondHead, int se
         firstHead->setTeam(secondHead->getTeam());
         secondHead->getTeam()->setFirstPlayer(firstHead);
         secondHead->setTeam(nullptr);
+        
 
         return firstHead;
    }

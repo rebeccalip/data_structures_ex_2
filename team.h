@@ -50,6 +50,7 @@ public:
     //bool IsInGame() const;
     TeamAbility getTeamsAbility() const;
     int getNumGoalKeepers() const;
+    void setGamesPlayed(int games) { num_of_games=games;};
 
     void updatePoints(const int extra);
     void updateGamesPlayed(const int extra);

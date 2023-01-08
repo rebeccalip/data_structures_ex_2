@@ -83,17 +83,19 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
 	{
 		teams_tree_id.find(teamId)->getValue()->setFirstPlayer(playerOppNode);
 		playerOppNode->setTeam(teams_tree_id.find(teamId)->getValue().get());
+		playerOppNode->setPermutation(permutation_t::neutral());
 		
 	}
 	else
 	{
 		playerOppNode->SetParent(teamsFirstPlayer);
+		playerOppNode->setPermutation(teamsFirstPlayer->getPermutation().inv());
 	}
 
 	player_hash_table.insert(playerId, playerOppNode);
 	// init games and permutation
 	playerOppNode->setGames(0);
-	playerOppNode->setPermutation(permutation_t::neutral());
+	
 	
 	//update team stats
 	std::shared_ptr<Team> playerTeam = teams_tree_id.find(teamId)->getValue();
