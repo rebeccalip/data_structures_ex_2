@@ -55,11 +55,11 @@ class AvlRankTree
                     if (this ->left == nullptr && this->right == nullptr)
                         return 0;
                     else if (this ->left == nullptr && this->right != nullptr)
-                        return this->right->calcHeight() + 1;
+                        return this->right->getHeight() + 1;
                     else if (this ->left != nullptr && this->right == nullptr)
-                        return this->left->calcHeight() + 1;
+                        return this->left->getHeight() + 1;
                     else
-                        return max(this->left->calcHeight(), this->right->calcHeight()) + 1;    
+                        return max(this->left->getHeight(), this->right->getHeight()) + 1;    
                 }
 
                 int calcRank() const
